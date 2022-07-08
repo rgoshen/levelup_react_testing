@@ -148,6 +148,60 @@ test('add', () => {
 
 ## Mocking Modules
 
+- mock the import and then mock the implementation of what we mock imported
+
+_src/add.js_
+
+```javascript
+export const add = (x, y) => x + y;
+```
+
+_src/add.test.js_
+
+```javascript
+import { add } from './add';
+
+// unit test
+
+test('add', () => {
+  expect(add(1, 2)).toBe(3);
+  expect(add(2, 5)).toBe(7);
+});
+
+```
+
+_src/App/js_
+
+```javascript
+import { add } from './add';
+
+export const total = (shipping, subTotal) => `$${add(shipping, subTotal)}`;
+```
+
+_src/App.test.js_
+
+```javascript
+import { total } from './App';
+import { add } from './add';
+
+jest.mock('./add', () => ({
+  add: jest.fn(() => 25),
+}));
+
+test('total', () => {
+  expect(total(5, 20)).toBe('$25');
+  expect(add).toHaveBeenCalledTimes(1); // spy on add function
+
+  // Redundant
+  add.mockImplementation(() => 30);
+
+  expect(total(5, 25)).toBe('$30');
+  expect(add).toHaveBeenCalledTimes(2); // spy on add function
+});
+```
+
+![mock module pass](assets/images/mock_module_pass.png)
+
 [top](#toc)
 
 ## Introduction to React Testing

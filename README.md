@@ -4,11 +4,27 @@
 
 ## TOC
 
-## Introduction to Testing with Jest
-
-[top](#toc)
-
 ## Jest Explained
+
+[Jest](https://jestjs.io/)
+
+_src/App.test.js_
+
+```javascript
+// should pass
+test('fake test', () => {
+  expect(true).toBeTruthy();
+});
+
+// should fail
+test('fake test', () => {
+  expect(false).toBeTruthy();
+});
+```
+
+![test_pass_output](assets/images/test_output_all_pass_example.png)
+
+![test_fail_output](assets/images/test_output_fail_example.png)
 
 [top](#toc)
 

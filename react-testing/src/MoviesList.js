@@ -11,21 +11,23 @@ class MoviesList extends PureComponent {
   async componentDidMount() {
     try {
       const res = await fetch(
-        'https://api.themoviedb.org/3/discover/movie?api_key=hi&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1',
+        `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_API_KEY}=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`
       );
-      const movies = await res.json();
+      const data = await res.json();
       this.setState({
-        movies: movies.results,
+        movies: data.results,
       });
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
   render() {
     return (
       <MovieGrid>
-        {this.state.movies.map(movie => <Movie key={movie.id} movie={movie} />)}
+        {this.state.movies.map((movie) => (
+          <Movie key={movie.id} movie={movie} />
+        ))}
       </MovieGrid>
     );
   }

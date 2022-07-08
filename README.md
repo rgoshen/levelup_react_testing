@@ -124,6 +124,26 @@ test('total', () => {
 
 ## Mock Functions & Why
 
+- mock a function that may not be accessable to the current test but an assertion relies on what comes back from that function in order to test what it needs to test in the function it is designed to test
+  - mock api calls
+  - mock database calls
+
+_src/App.test.js_
+
+```javascript
+import { total } from './App';
+
+const add = jest.fn(() => 3); // mocking the add function
+
+test('add', () => {
+  expect(add(1, 2)).toBe(3);
+  expect(add).toHaveBeenCalledTimes(1);
+  expect(add).toHaveBeenCalledWith(1, 2);
+});
+```
+
+![Mock test pass](assets/images/mock_test_pass_1.png)
+
 [top](#toc)
 
 ## Mocking Modules

@@ -94,6 +94,32 @@ test('add', () => {
 
 ## Writing Integration Tests
 
+Tests where one unit interacts with another unit
+
+_src/App.js_
+
+```javascript
+export const add = (x, y) => x + y;
+
+export const total = (shipping, subTotal) => `$${add(shipping, subTotal)}`;
+```
+
+_src/App.test.js_
+
+```javascript
+import { add, total } from './App';
+
+test('add', () => {
+  expect(add(1, 2)).toBe(3);
+  expect(add(2, 5)).toBe(7);
+});
+
+// integration test b/c not only testing total function but also the add function and its output to total function
+test('total', () => {
+  expect(total(5, 20)).toBe('$25');
+});
+```
+
 [top](#toc)
 
 ## Mock Functions & Why

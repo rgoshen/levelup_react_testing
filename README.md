@@ -4,6 +4,30 @@
 
 ## TOC
 
+- [React Testing for Beginners](#react-testing-for-beginners)
+  - [TOC](#toc)
+  - [Jest Explained](#jest-explained)
+  - [Writing Unit Tests with Jest](#writing-unit-tests-with-jest)
+  - [Writing Integration Tests](#writing-integration-tests)
+  - [Mock Functions & Why](#mock-functions--why)
+  - [Mocking Modules](#mocking-modules)
+  - [Introduction to React Testing](#introduction-to-react-testing)
+  - [React Testing Library & Debug](#react-testing-library--debug)
+  - [Testing with Test Ids](#testing-with-test-ids)
+  - [Events in React Testing Library](#events-in-react-testing-library)
+  - [Integration Testing in React & Cleanup](#integration-testing-in-react--cleanup)
+  - [Snapshot Testing 101](#snapshot-testing-101)
+  - [Spying & Mocking Functions in React](#spying--mocking-functions-in-react)
+  - [Form Events With Controlled Inputs](#form-events-with-controlled-inputs)
+  - [Testing for Errors & Global Mocks](#testing-for-errors--global-mocks)
+  - [Negative Assertions & Testing With React Router](#negative-assertions--testing-with-react-router)
+  - [What To Test](#what-to-test)
+  - [Mocking Fetch](#mocking-fetch)
+  - [Mocking Fetch Part 2 & Async Tests & Working With Data](#mocking-fetch-part-2--async-tests--working-with-data)
+  - [Testing Loading States & More Pitfalls](#testing-loading-states--more-pitfalls)
+  - [Refactoring with Tests](#refactoring-with-tests)
+  - [Code Coverage](#code-coverage)
+
 ## Jest Explained
 
 [Jest](https://jestjs.io/)

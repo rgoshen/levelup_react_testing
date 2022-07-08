@@ -1,3 +1,3 @@
-export const add = (x, y) => x + y;
+import { add } from './add';
 
 export const total = (shipping, subTotal) => `$${add(shipping, subTotal)}`;

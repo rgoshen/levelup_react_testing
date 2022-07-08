@@ -30,6 +30,42 @@ test('fake test', () => {
 
 ## Writing Unit Tests with Jest
 
+Unit Test - should test just one thing
+
+_src/App.js_
+
+```javascript
+export const add = (x, y) => x + y;
+```
+
+_src/App.test.js_
+
+```javascript
+import { add } from './App';
+
+// should pass
+test.skip('fake test', () => {
+  expect(true).toBeTruthy();
+});
+
+// should fail
+test.skip('fake test', () => {
+  expect(false).toBeTruthy();
+});
+
+test('add', () => {
+  // option 1
+  // const value = add(1, 2);
+  // expect(value).toBe(3);
+
+  // option 2
+  expect(add(1, 2)).toBe(3);
+  expect(add(2, 5)).toBe(7);
+});
+```
+
+![first unit test output](assets/images/first_unit_test_output.png)
+
 [top](#toc)
 
 ## Writing Integration Tests

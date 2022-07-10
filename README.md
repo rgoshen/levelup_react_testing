@@ -500,11 +500,87 @@ initial output with just skeleton files and test
 
 `expect(container.firstChild).toMatchSnapshot();`
 
+_src/NewMovie.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup, fireEvent } from 'react-testing-library';
+import NewMovie from './NewMovie';
+
+afterEach(cleanup);
+
+test('<NewMovie/>', () => {
+  const { debug, getByTestId, queryByTestId, container } = render(<NewMovie />);
+
+  expect(getByTestId('page-title').textContent).toBe('New Movie');
+  expect(queryByTestId('movie-form')).toBeTruthy();
+  expect(container.firstChild).toMatchSnapshot();
+
+  debug();
+});
+```
+
 DO NOT rely on snapshot tests for your only testing
 
 [top](#toc)
 
 ## Spying & Mocking Functions in React
+
+_src/MovieForm.js_
+
+```javascript
+import React, { Component } from 'react';
+
+export default class MovieForm extends Component {
+  state = {
+    text: '',
+  };
+
+  render() {
+    const { submitForm } = this.props;
+    const { text } = this.state;
+
+    return (
+      <form
+        data-testid='movie-form'
+        onSubmit={() =>
+          submitForm({
+            text,
+          })
+        }
+      >
+        <input type='text' />
+        <button>Submit</button>
+      </form>
+    );
+  }
+}
+```
+
+_src/MovieForm.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup, fireEvent } from 'react-testing-library';
+import MovieForm from './MovieForm';
+
+afterEach(cleanup);
+
+const onSubmit = jest.fn();
+
+test('<MovieForm/>', () => {
+  const { queryByTestId, container, getByText } = render(
+    <MovieForm submitForm={onSubmit} />
+  );
+
+  expect(queryByTestId('movie-form')).toBeTruthy();
+
+  const submitBtn = getByText('Submit');
+  fireEvent.click(submitBtn);
+
+  expect(onSubmit).toHaveBeenCalledTimes(1);
+});
+```
 
 [top](#toc)
 

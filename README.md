@@ -341,6 +341,86 @@ test('<Counter />', () => {
 
 ## Events in React Testing Library
 
+- can simulate events by using `fireEvent`
+- do **NOT** have to have the app running to use these tests
+- you do not need to check state with React-Testing-Library
+
+_src/Counter.js_
+
+```javascript
+import React, { Component } from 'react';
+
+export default class Counter extends Component {
+  state = {
+    count: 0,
+  };
+
+  count = () => {
+    this.setState((prevState) => ({
+      count: prevState.count + 1,
+    }));
+  };
+
+  render() {
+    const { count } = this.state;
+    return (
+      <div>
+        <button onClick={this.count} data-testid='counter-button'>
+          {count}
+        </button>
+      </div>
+    );
+  }
+}
+```
+
+- refactor `Counter.test.js` again by using `const counterBtn = getByTestId('counter-button');`
+- replace `getByTestId('counter-button')` with `counterBtn`
+
+_src/Counter.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup, fireEvent } from 'react-testing-library';
+import Counter from './Counter';
+
+afterEach(cleanup);
+
+test('<Counter />', () => {
+  // Renders component
+  const { debug, getByTestId } = render(<Counter />);
+
+  // find the button
+  const counterBtn = getByTestId('counter-button');
+
+  debug(); // not needed to test, just handy
+
+  // Asserts counter-button is a button
+  expect(counterBtn.tagName).toBe('BUTTON');
+  // Asserts counter-button starts at 0
+  expect(counterBtn.textContent).toBe('0');
+
+  // events
+  fireEvent.click(counterBtn);
+  // Asserts counter-button adds 1
+  expect(counterBtn.textContent).toBe('1');
+
+  // events
+  fireEvent.click(counterBtn);
+  // Asserts counter-button adds 1
+  expect(counterBtn.textContent).toBe('2');
+
+  debug();
+});
+```
+
+- test output before adding counter functionality to `Counter.js`
+
+![test failure](/assets/images/test_failure_1.png)
+
+- test output after adding counter functionality to `Counter.js`
+![test pass](assets/images/test_pass_1.png)
+
 [top](#toc)
 
 ## Integration Testing in React & Cleanup

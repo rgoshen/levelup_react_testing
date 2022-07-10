@@ -491,6 +491,17 @@ initial output with just skeleton files and test
 
 ## Snapshot Testing 101
 
+- generally better off with manual tests
+- however, snapshot testing is really good for a component that does not change very often if hardly ever
+    - then you can check the component to see if something changed
+    - fragile tests
+
+- they are easy and fast and very good in the right context
+
+`expect(container.firstChild).toMatchSnapshot();`
+
+DO NOT rely on snapshot tests for your only testing
+
 [top](#toc)
 
 ## Spying & Mocking Functions in React

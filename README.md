@@ -11,7 +11,6 @@
   - [Writing Integration Tests](#writing-integration-tests)
   - [Mock Functions & Why](#mock-functions--why)
   - [Mocking Modules](#mocking-modules)
-  - [Introduction to React Testing](#introduction-to-react-testing)
   - [React Testing Library & Debug](#react-testing-library--debug)
   - [Testing with Test Ids](#testing-with-test-ids)
   - [Events in React Testing Library](#events-in-react-testing-library)
@@ -204,11 +203,70 @@ test('total', () => {
 
 [top](#toc)
 
-## Introduction to React Testing
-
-[top](#toc)
-
 ## React Testing Library & Debug
+
+_src/Counter.js_
+
+```javascript
+import React, { Component } from 'react';
+
+export default class Counter extends Component {
+  state = {
+    count: 0,
+  };
+
+  render() {
+    const { count } = this.state;
+    return (
+      <div>
+        <button>{count}</button>
+      </div>
+    );
+  }
+}
+```
+
+_src/Counter.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import Counter from './Counter';
+
+test('<Counter />', () => {
+  const wrapper = render(<Counter />);
+  wrapper.debug();
+});
+```
+
+Output from line 7 of `Counter.test.js`
+
+![debug output](assets/images/debug_output_counter.test.png)
+
+- easy way to get some visibilty on our `<Counter />` component
+- if you added `console.log(wrapper.getByText('0'));` inside the callback of the test function, the following output in the console would be the actual DOM node.
+
+![getByText output](assets/images/getByText-output.png)
+
+- from here you can then add on something like `console.log(wrapper.getByText('0').tagName);` and get:
+
+![tagName output](assets/images/tagName_output.png)
+
+_src/Counter.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import Counter from './Counter';
+
+test('<Counter />', () => {
+  const wrapper = render(<Counter />);
+
+    expect(wrapper.getByText('0').tagName).toBe('BUTTON');
+});
+```
+
+![first test](assets/images/first_test.png)
 
 [top](#toc)
 

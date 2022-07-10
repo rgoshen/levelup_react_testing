@@ -3,11 +3,13 @@ import { render, cleanup } from 'react-testing-library';
 import Counter from './Counter';
 
 test('<Counter />', () => {
-  const wrapper = render(<Counter />);
-  //   wrapper.debug();
+  // Renders component
+  const { debug, getByTestId } = render(<Counter />);
 
-  expect(wrapper.getByText('0').tagName).toBe('BUTTON');
-  //   console.log(wrapper.getByText('0'));
-  //   console.log(wrapper.getByText('0').textContent);
-  //   console.log(wrapper.getByText('0').tagName);
+  debug(); // not needed to test, just handy
+
+  // Asserts counter-button is a button
+  expect(getByTestId('counter-button').tagName).toBe('BUTTON');
+  // Asserts counter-button starts at 0
+  expect(getByTestId('counter-button').textContent).toBe('0');
 });

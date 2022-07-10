@@ -205,6 +205,10 @@ test('total', () => {
 
 ## React Testing Library & Debug
 
+> NOTE: `Counter.js` is not really used in the actual app,
+> just demonstrate some basic React-Testing-Library
+> principles.
+
 _src/Counter.js_
 
 ```javascript
@@ -271,6 +275,67 @@ test('<Counter />', () => {
 [top](#toc)
 
 ## Testing with Test Ids
+
+One of the big differences between using React-Testing-Library and a third-party library such as Enzyme (Enzyme is no longer going to be kept up after React 17) is in Enzyme you could lookup a component by the component name.  Sounds great and easy, however, users don't know the component name or interact with the component directly.  In React-Testing-Library you look up an element just as it is in the DOM.  This is how a user interacts with your app, through the DOM.  And you should test your app the way a user will interact with it.
+
+_src/Counter.js_
+
+```javascript
+import React, { Component } from 'react';
+
+export default class Counter extends Component {
+  state = {
+    count: 0,
+  };
+
+  render() {
+    const { count } = this.state;
+    return (
+      <div>
+        <button data-testid='counter-button'>{count}</button>
+      </div>
+    );
+  }
+}
+```
+
+> NOTE: if you happen to see in VSCode red underlines under the keywords **test** and **expect**, then you can add those as globals in the your `.eslintrc.js` file.
+
+```javascript
+...},
+globals:{
+  test: true,
+  expect: true
+}
+```
+
+- refactor `Counter.test.js` file to below.
+    - destructure out `debug` and `getByTestId` from the `<Counter />` component
+    - `const { debug, getByTestId } = render(<Counter />);`
+    - now have access to `debug` and `getByTestId` directly
+
+
+_src/Counter.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import Counter from './Counter';
+
+test('<Counter />', () => {
+  // Renders component
+  const { debug, getByTestId } = render(<Counter />);
+
+  debug(); // not needed to test, just handy
+
+  // Asserts counter-button is a button
+  expect(getByTestId('counter-button').tagName).toBe('BUTTON');
+  // Asserts counter-button starts at 0
+  expect(getByTestId('counter-button').textContent).toBe('0');
+});
+```
+
+![second test](assets/images/second_test.png)
 
 [top](#toc)
 

@@ -209,7 +209,7 @@ test('total', () => {
 > just demonstrate some basic React-Testing-Library
 > principles.
 
-_src/Counter.js_
+_src/example_components/Counter.js_
 
 ```javascript
 import React, { Component } from 'react';
@@ -230,7 +230,7 @@ export default class Counter extends Component {
 }
 ```
 
-_src/Counter.test.js_
+_src/example_components/Counter.test.js_
 
 ```javascript
 import React from 'react';
@@ -256,7 +256,7 @@ Output from line 7 of `Counter.test.js`
 
 ![tagName output](assets/images/tagName_output.png)
 
-_src/Counter.test.js_
+_src/example_components/Counter.test.js_
 
 ```javascript
 import React from 'react';
@@ -278,7 +278,7 @@ test('<Counter />', () => {
 
 One of the big differences between using React-Testing-Library and a third-party library such as Enzyme (Enzyme is no longer going to be kept up after React 17) is in Enzyme you could lookup a component by the component name.  Sounds great and easy, however, users don't know the component name or interact with the component directly.  In React-Testing-Library you look up an element just as it is in the DOM.  This is how a user interacts with your app, through the DOM.  And you should test your app the way a user will interact with it.
 
-_src/Counter.js_
+_src/example_components/Counter.js_
 
 ```javascript
 import React, { Component } from 'react';
@@ -315,7 +315,7 @@ globals:{
     - now have access to `debug` and `getByTestId` directly
 
 
-_src/Counter.test.js_
+_src/example_components/Counter.test.js_
 
 ```javascript
 import React from 'react';
@@ -345,7 +345,7 @@ test('<Counter />', () => {
 - do **NOT** have to have the app running to use these tests
 - you do not need to check state with React-Testing-Library
 
-_src/Counter.js_
+_src/example_components/Counter.js_
 
 ```javascript
 import React, { Component } from 'react';
@@ -377,7 +377,7 @@ export default class Counter extends Component {
 - refactor `Counter.test.js` again by using `const counterBtn = getByTestId('counter-button');`
 - replace `getByTestId('counter-button')` with `counterBtn`
 
-_src/Counter.test.js_
+_src/example_components/Counter.test.js_
 
 ```javascript
 import React from 'react';
@@ -424,6 +424,68 @@ test('<Counter />', () => {
 [top](#toc)
 
 ## Integration Testing in React & Cleanup
+
+_src/NewMovie.js_
+
+```javascript
+import React, { Component } from 'react';
+import MovieForm from './MovieForm';
+
+class NewMovie extends Component {
+  render() {
+    return (
+      <div>
+        <h1 data-testid='page-title'>New Movie</h1>
+        <MovieForm />
+      </div>
+    );
+  }
+}
+
+export default NewMovie;
+```
+
+_src/MovieForm.js_
+
+```javascript
+import React, { Component } from 'react';
+
+export default class MovieForm extends Component {
+  render() {
+    return (
+      <form data-testid='movie-form'>
+        <input type='text' />
+        <button>Submit</button>
+      </form>
+    );
+  }
+}
+```
+
+_src/NewMovie.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup, fireEvent } from 'react-testing-library';
+import NewMovie from './NewMovie';
+
+afterEach(cleanup);
+
+test('<NewMovie/>', () => {
+  const { debug, getByTestId, queryByTestId } = render(<NewMovie />);
+  expect(getByTestId('page-title').textContent).toBe('New Movie');
+  expect(queryByTestId('movie-form')).toBeTruthy();
+
+  debug();
+});
+```
+
+initial output with just skeleton files and test
+
+![skeleton output](assets/images/skeleton_integration_output.png)
+
+- `getByTestId` will return an error if it can not find the element -- it MUST be there or throw an error
+- `queryByTestId` is slightly different, it just sees if there or nothing
 
 [top](#toc)
 

@@ -4,7 +4,7 @@ import Counter from './Counter';
 
 afterEach(cleanup);
 
-test('<Counter />', () => {
+test.skip('<Counter />', () => {
   // Renders component
   const { debug, getByTestId } = render(<Counter />);
 

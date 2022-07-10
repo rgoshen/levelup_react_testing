@@ -520,6 +520,15 @@ test('<NewMovie/>', () => {
 });
 ```
 
+- once this run when the test runs, creates a folder called `__snapshots__` under `src` and puts all snapshots there
+- each and everytime thereafter, it runs a new snapshot (does not save it under the folder) and compares it to the one stored
+
+failed snapshot test
+
+![failed snapshot](assets/images/failed_snapshot.png)
+
+- if this was a legimate change, then you can press 'u' while the terminal has focus and it will update the snapshot, else  fix the issue and rerun
+
 DO NOT rely on snapshot tests for your only testing
 
 [top](#toc)

@@ -11,7 +11,7 @@ test('<Counter />', () => {
   // find the button
   const counterBtn = getByTestId('counter-button');
 
-  debug(); // not needed to test, just handy
+  // debug(); // not needed to test, just handy
 
   // Asserts counter-button is a button
   expect(counterBtn.tagName).toBe('BUTTON');
@@ -28,5 +28,5 @@ test('<Counter />', () => {
   // Asserts counter-button adds 1
   expect(counterBtn.textContent).toBe('2');
 
-  debug();
+  // debug();
 });

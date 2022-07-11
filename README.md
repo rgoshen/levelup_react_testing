@@ -670,6 +670,61 @@ test('<MovieForm/>', () => {
 
 ## Testing for Errors & Global Mocks
 
+_src/Movie.js_
+
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Overdrive from 'react-overdrive';
+
+const POSTER_PATH = 'http://image.tmdb.org/t/p/w154';
+
+const Movie = ({ movie }) => {
+  if (!movie) return null;
+
+  return (
+    <Link to={`/${movie.id}`}>
+      <Overdrive id={`${movie.id}`}>
+        <Poster src={`${POSTER_PATH}${movie.poster_path}`} alt={movie.title} />
+      </Overdrive>
+    </Link>
+  );
+};
+
+export default Movie;
+
+Movie.propTypes = {
+  movie: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    poster_path: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
+export const Poster = styled.img`
+  box-shadow: 0 0 35px black;
+`;
+```
+
+_src/Movie.test.js_
+
+```javscript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import Movie from './Movie';
+
+afterEach(cleanup);
+
+console.error = jest.fn();
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).toBeCalled();
+});
+``` 
+
 [top](#toc)
 
 ## Negative Assertions & Testing With React Router

@@ -34,5 +34,4 @@ test('<Movie /> with movie', () => {
   expect(getByTestId('movie-img').src).toBe(
     `${POSTER_PATH}${movie.poster_path}`
   );
-  debug();
 });

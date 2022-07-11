@@ -985,6 +985,16 @@ test('<Movie /> with movie', () => {
 
 ## Mocking Fetch
 
+- need to add `jest-fetch-mock`
+    - `npm install jest-fetch-mock`
+_src/MovieDetail.test.js_
+
+```javascript
+
+```
+
+![test pass caveat](assets/images/test-pass-caveat.png) 
+
 [top](#toc)
 
 ## Mocking Fetch Part 2 & Async Tests & Working With Data

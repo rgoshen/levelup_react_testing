@@ -7,14 +7,24 @@ afterEach(cleanup);
 const onSubmit = jest.fn();
 
 test('<MovieForm/>', () => {
-  const { queryByTestId, container, getByText } = render(
+  const { queryByTestId, getByText, getByLabelText } = render(
     <MovieForm submitForm={onSubmit} />
   );
 
   expect(queryByTestId('movie-form')).toBeTruthy();
 
-  const submitBtn = getByText('Submit');
-  fireEvent.click(submitBtn);
+  // Note might not work
+  // getByLabelText('Text').value = 'hello';
+  // fireEvent.change(getByLabelText('Text'));
+
+  fireEvent.change(getByLabelText('Text'), {
+    target: { value: 'hello' },
+  });
+
+  fireEvent.click(getByText('Submit'));
 
   expect(onSubmit).toHaveBeenCalledTimes(1);
+  expect(onSubmit).toHaveBeenCalledWith({
+    text: 'hello',
+  });
 });

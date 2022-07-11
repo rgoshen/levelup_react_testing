@@ -10,8 +10,14 @@ exports[`<NewMovie/> 1`] = `
   <form
     data-testid="movie-form"
   >
+    <label
+      for="text"
+    >
+      Text
+    </label>
     <input
       type="text"
+      id="text"
     />
     <button>
       Submit

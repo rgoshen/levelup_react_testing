@@ -595,6 +595,77 @@ test('<MovieForm/>', () => {
 
 ## Form Events With Controlled Inputs
 
+_src/MovieForm.js_
+
+```javascript
+import React, { Component } from 'react';
+
+export default class MovieForm extends Component {
+  state = {
+    text: '',
+  };
+
+  render() {
+    const { submitForm } = this.props;
+    const { text } = this.state;
+
+    return (
+      <form
+        data-testid='movie-form'
+        onSubmit={() =>
+          submitForm({
+            text,
+          })
+        }
+      >
+        <label htmlFor='text'>Text</label>
+        <input
+          type='text'
+          id='text'
+          onChange={(e) => this.setState({ text: e.target.value })}
+        />
+        <button>Submit</button>
+      </form>
+    );
+  }
+}
+```
+
+_src/MovieForm.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup, fireEvent } from 'react-testing-library';
+import MovieForm from './MovieForm';
+
+afterEach(cleanup);
+
+const onSubmit = jest.fn();
+
+test('<MovieForm/>', () => {
+  const { queryByTestId, getByText, getByLabelText } = render(
+    <MovieForm submitForm={onSubmit} />
+  );
+
+  expect(queryByTestId('movie-form')).toBeTruthy();
+
+  // Note might not work
+  // getByLabelText('Text').value = 'hello';
+  // fireEvent.change(getByLabelText('Text'));
+
+  fireEvent.change(getByLabelText('Text'), {
+    target: { value: 'hello' },
+  });
+
+  fireEvent.click(getByText('Submit'));
+
+  expect(onSubmit).toHaveBeenCalledTimes(1);
+  expect(onSubmit).toHaveBeenCalledWith({
+    text: 'hello',
+  });
+});
+```
+
 [top](#toc)
 
 ## Testing for Errors & Global Mocks

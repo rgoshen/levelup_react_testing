@@ -837,6 +837,150 @@ test('<Movie /> with movie', () => {
 
 ## What To Test
 
+- don't want to test to make sure React is doing its job
+- you want to test to make the sure the app is doing what the user is expecting it to do
+
+`expect(getByTestId('movie-link').href);`
+
+- can do it this way, however, remember locally running on localhost and this would return the absolute path to include https and make out test brittle
+
+`expect(getByTestId('movie-link').getAttribute('href'));`
+
+- better way because this would return relative path instead
+
+_src/Movie.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import { MemoryRouter } from 'react-router-dom';
+import Movie from './Movie';
+
+afterEach(() => {
+  cleanup;
+  console.error.mockClear(); // reset after each test
+});
+
+console.error = jest.fn();
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).toBeCalled();
+});
+
+const movie = {
+  id: 'hi',
+  title: 'Some movie',
+  poster_path: 'somepic.jpg',
+};
+
+test('<Movie /> with movie', () => {
+  const { debug, getByTestId } = render(
+    // fake router
+    <MemoryRouter>
+      <Movie movie={movie} />
+    </MemoryRouter>
+  );
+
+  expect(console.error).not.toHaveBeenCalled();
+  expect(getByTestId('movie-link').getAttribute('href')).toBe(movie.id);
+  debug();
+});
+```
+
+![test failure](assets/images/test_failure_2.png)
+
+_src/Movie.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import { MemoryRouter } from 'react-router-dom';
+import Movie from './Movie';
+
+afterEach(() => {
+  cleanup;
+  console.error.mockClear(); // reset after each test
+});
+
+console.error = jest.fn();
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).toBeCalled();
+});
+
+const movie = {
+  id: 'hi',
+  title: 'Some movie',
+  poster_path: 'somepic.jpg',
+};
+
+test('<Movie /> with movie', () => {
+  const { debug, getByTestId } = render(
+    // fake router
+    <MemoryRouter>
+      <Movie movie={movie} />
+    </MemoryRouter>
+  );
+
+  expect(console.error).not.toHaveBeenCalled();
+  expect(getByTestId('movie-link').getAttribute('href')).toBe(`/${movie.id}`);
+  debug();
+});
+```
+
+![test pass](assets/images/test_pass_2.png)
+
+- tested to make sure the link href was correctly set
+
+_src/Movie.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import { MemoryRouter } from 'react-router-dom';
+import Movie, { POSTER_PATH } from './Movie';
+
+afterEach(() => {
+  cleanup;
+  console.error.mockClear(); // reset after each test
+});
+
+console.error = jest.fn();
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).toBeCalled();
+});
+
+const movie = {
+  id: 'hi',
+  title: 'Some movie',
+  poster_path: 'somepic.jpg',
+};
+
+test('<Movie /> with movie', () => {
+  const { debug, getByTestId } = render(
+    // fake router
+    <MemoryRouter>
+      <Movie movie={movie} />
+    </MemoryRouter>
+  );
+
+  expect(console.error).not.toHaveBeenCalled();
+  expect(getByTestId('movie-link').getAttribute('href')).toBe(`/${movie.id}`);
+  expect(getByTestId('movie-img').src).toBe(
+    `${POSTER_PATH}${movie.poster_path}`
+  );
+  debug();
+});
+```
+
+![test pass](assets/images/test_pass_3.png)
+
+- tests to make sure the image src is set correctly
+
 [top](#toc)
 
 ## Mocking Fetch

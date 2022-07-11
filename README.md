@@ -729,6 +729,110 @@ test('<Movie />', () => {
 
 ## Negative Assertions & Testing With React Router
 
+_src/Movie.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import Movie from './Movie';
+
+afterEach(cleanup);
+
+console.error = jest.fn();
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).toBeCalled();
+});
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).not.toBeCalled();
+});
+```
+
+![output fail 1](assets/images/output_failure_1.png)
+
+_src/Movie.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import { MemoryRouter } from 'react-router-dom';
+import Movie from './Movie';
+
+afterEach(cleanup);
+
+console.error = jest.fn();
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).toBeCalled();
+});
+
+const movie = {
+  id: 'hi',
+  title: 'Some movie',
+  poster_path: 'somepic.jpg',
+};
+
+test('<Movie /> with movie', () => {
+  render(
+    // fake router
+    <MemoryRouter>
+      <Movie movie={movie} />
+    </MemoryRouter>
+  );
+
+  expect(console.error).not.toHaveBeenCalled();
+});
+```
+
+![output fail 2](assets/images/output_failure_2.png)
+
+- pitfall: console.error spy has been called in previous test when movie was undefined.
+- mock functions remember when they have been called during the current testing session
+- therefore, the spy function needs to be reset
+
+_src/Movie.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import { MemoryRouter } from 'react-router-dom';
+import Movie from './Movie';
+
+afterEach(() => {
+  cleanup;
+  console.error.mockClear(); // reset after each test
+});
+
+console.error = jest.fn();
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).toBeCalled();
+});
+
+const movie = {
+  id: 'hi',
+  title: 'Some movie',
+  poster_path: 'somepic.jpg',
+};
+
+test('<Movie /> with movie', () => {
+  render(
+    <MemoryRouter>
+      <Movie movie={movie} />
+    </MemoryRouter>
+  );
+
+  expect(console.error).not.toHaveBeenCalled();
+});
+```
+
+![output pass](assets/images/output_pass.png)
+
 [top](#toc)
 
 ## What To Test

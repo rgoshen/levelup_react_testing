@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, cleanup } from 'react-testing-library';
+import { render, cleanup, waitForElement } from 'react-testing-library';
 import MovieDetail from './MovieDetail';
 
 global.fetch = require('jest-fetch-mock');
@@ -17,16 +17,17 @@ const match = {
 
 console.error = jest.fn();
 
-test('<MovieDetail />', () => {
-  fetch.mockResponseOnce(
-    JSON.stringify({
-      movie: {
-        id: 'hi',
-        title: 'some movie title',
-      },
-    })
-  );
+// TODO: add rest of movie detail and add assertions for them
+const movie = {
+  id: 'hi',
+  title: 'some movie title',
+};
 
-  const { debug } = render(<MovieDetail match={match} />);
-  debug();
+test('<MovieDetail />', async () => {
+  fetch.mockResponseOnce(JSON.stringify(movie));
+
+  const { debug, getByTestId } = render(<MovieDetail match={match} />);
+  await waitForElement(() => getByTestId('movie-title'));
+
+  expect(getByTestId('movie-title').textContent).toBe(movie.title);
 });

@@ -995,9 +995,52 @@ _src/MovieDetail.test.js_
 
 ![test pass caveat](assets/images/test-pass-caveat.png) 
 
+- notice though we have no h1, h3, p
+- even though we mocked teh fetch and response, since this is an async call, it still takes time and then rerenders when the data comes back
+- `debug()` on the other hand outputs before that data has come back
+
 [top](#toc)
 
 ## Mocking Fetch Part 2 & Async Tests & Working With Data
+
+_src/MovieDetail.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup, waitForElement } from 'react-testing-library';
+import MovieDetail from './MovieDetail';
+
+global.fetch = require('jest-fetch-mock');
+
+afterEach(() => {
+  cleanup;
+  console.error.mockClear(); // reset after each test
+});
+
+const match = {
+  params: {
+    id: 'movieid',
+  },
+};
+
+console.error = jest.fn();
+
+// TODO: add rest of movie detail and add assertions for them
+const movie = {
+  id: 'hi',
+  title: 'some movie title',
+};
+
+test('<MovieDetail />', async () => {
+  fetch.mockResponseOnce(JSON.stringify(movie));
+
+  const { debug, getByTestId } = render(<MovieDetail match={match} />);
+  await waitForElement(() => getByTestId('movie-title'));
+
+  expect(getByTestId('movie-title').textContent).toBe(movie.title);
+});
+```
+![test pass](assets/images/test_pass_4.png)
 
 [top](#toc)
 

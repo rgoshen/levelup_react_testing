@@ -1309,4 +1309,8 @@ test('<MoviesList /> api fail', async () => {
 
 ## Code Coverage
 
+`yarn test --coverage`
+
+![code coverage output](assets/images/code_coverage.png)
+
 [top](#toc)

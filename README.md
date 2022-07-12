@@ -1170,6 +1170,141 @@ test('<MoviesList />', async () => {
 
 ## Refactoring with Tests
 
+_src/movies/MoviesList.js_
+
+```javascript
+/* eslint react/no-did-mount-set-state: 0 */
+import React, { PureComponent } from 'react';
+import styled from 'styled-components';
+import Movie from './Movie';
+
+class MoviesList extends PureComponent {
+  state = {
+    movies: [],
+  };
+
+  async componentDidMount() {
+    try {
+      const res = await fetch(
+        `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`
+      );
+      const movies = await res.json();
+      this.setState({
+        movies: movies.results,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  render() {
+    const { movies } = this.state;
+    // TODO: maybe add loading component here
+    if (movies < 1) return <h1 data-testid='loading'>Loading...</h1>;
+    return (
+      <MovieGrid>
+        {movies.map((movie) => (
+          <Movie key={movie.id} movie={movie} />
+        ))}
+      </MovieGrid>
+    );
+  }
+}
+
+export default MoviesList;
+
+const MovieGrid = styled.div`
+  display: grid;
+  padding: 1rem;
+  grid-template-columns: repeat(6, 1fr);
+  grid-row-gap: 1rem;
+`;
+```
+
+_src/movies/__tests__/MoviesList.test.js_
+
+```javascript
+import React from 'react';
+import { render, cleanup, waitForElement } from 'react-testing-library';
+import { MemoryRouter } from 'react-router-dom';
+import MoviesList from '../MoviesList';
+
+global.fetch = require('jest-fetch-mock');
+
+afterEach(() => {
+  cleanup;
+  console.error.mockClear(); // reset after each test
+});
+
+console.error = jest.fn();
+
+const movies = {
+  success: true,
+  results: [
+    {
+      id: 'hi',
+      title: 'some movie title',
+      poster_path: 'somepic.jpg',
+    },
+    {
+      id: 'hiz',
+      title: 'something movie title',
+      poster_path: 'somepic.jpg',
+    },
+    {
+      id: 'him',
+      title: 'sometime movie title',
+      poster_path: 'somepic.jpg',
+    },
+    {
+      id: 'hizse',
+      title: 'somewhere movie title',
+      poster_path: 'somepic.jpg',
+    },
+    {
+      id: 'hiewr',
+      title: 'some other movie title',
+      poster_path: 'somepic.jpg',
+    },
+  ],
+};
+
+const movie = movies.results[0];
+
+test('<MoviesList />', async () => {
+  fetch.mockResponseOnce(JSON.stringify(movies));
+
+  const { debug, getByTestId, queryByTestId, getAllByTestId } = render(
+    <MemoryRouter>
+      <MoviesList />
+    </MemoryRouter>
+  );
+
+  expect(getByTestId('loading')).toBeTruthy(); // test loading state
+
+  await waitForElement(() => getByTestId('movie-link'));
+
+  expect(queryByTestId('loading')).toBeFalsy(); // test loading state
+  expect(getByTestId('movie-link').getAttribute('href')).toBe(`/${movie.id}`); // test for nested component
+  expect(getAllByTestId('movie-link').length).toBe(movies.results.length); // tests to make sure it will render the same amount we expect is inputted
+});
+
+test('<MoviesList /> api fail', async () => {
+  movies.success = false;
+  fetch.mockResponseOnce(JSON.stringify(movies));
+
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <MoviesList />
+    </MemoryRouter>
+  );
+
+  expect(getByTestId('loading')).toBeTruthy(); // test loading state
+});
+```
+
+![test output](assets/images/test_pass_6.png)
+
 [top](#toc)
 
 ## Code Coverage

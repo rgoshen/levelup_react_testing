@@ -24,6 +24,7 @@ class MoviesList extends PureComponent {
 
   render() {
     const { movies } = this.state;
+    // TODO: maybe add loading component here
     if (movies < 1) return <h1 data-testid='loading'>Loading...</h1>;
     return (
       <MovieGrid>
